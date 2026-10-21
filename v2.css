@@ -1,0 +1,53 @@
+/* Personal Finance V2 — Dark Minimal. Branch preview; no data migration on load. */
+:root{color-scheme:dark;font-family:system-ui,'Noto Sans Thai',sans-serif;color:#f5f5f5;background:#111316}
+body{background:#111316;color:#f5f5f5}
+.sidebar{background:#17191c;border-right:1px solid #303236;color:#f5f5f5}
+.logo{font-size:18px;letter-spacing:-.3px}
+.nav{color:#a8adb6}.nav.active{background:#303438;color:#fff}
+.content{max-width:1040px}
+h1,h2{letter-spacing:-.4px}h1{font-size:24px}h2{font-size:17px}
+.muted,.label,.itemsub,.help,.foot{color:#aab0b9}
+.card,.dialog{background:#222528;border:1px solid #35393e;box-shadow:none;color:#f5f5f5}
+.card{border-radius:16px}.btn,.fab{background:#e4e6e9;color:#17191c;font-weight:700}
+.btn.secondary{background:#363b40;color:#f2f3f5}
+.btn.danger{background:#412b30;color:#f0b3b8}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.value,.purple,.blue{color:#f5f5f5}.green{color:#add1bb}.red{color:#e3a9a9}
+.field input,.field select,.field textarea,.filters input,.filters select{background:#181b1e;color:#f5f5f5;border:1px solid #454a50;min-height:44px}
+.field input:focus,.field select:focus,.field textarea:focus{outline:2px solid #9ca3af;outline-offset:1px}
+.item,.accountrow{border-bottom-color:#35393e}
+.progress{background:#41464a}.progress>div{background:#d1d5da}
+.empty{color:#a4aab2}.notice{background:#312b23;color:#e4c9a5}
+.modal{background:#000b}.dialog{max-width:530px}
+.nav-bottom{background:#191c1f;border-top:1px solid #33383d;box-shadow:none}
+.nav-bottom button{color:#a2a8b0}.nav-bottom button.active{color:#fff}
+.v2-hero{background:#292d31;border:1px solid #3b4146;border-radius:18px;padding:22px;margin-bottom:14px}
+.v2-hero .big{font-size:clamp(30px,8vw,40px);font-weight:800;margin:8px 0;letter-spacing:-1px}
+.v2-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:16px}
+.v2-mini{background:#24272b;border:1px solid #353a3f;padding:15px;border-radius:14px}
+.v2-mini strong{display:block;font-size:21px;margin-top:6px}
+.v2-label{font-size:12px;color:#adb3ba}
+.v2-line{height:7px;background:#42464a;border-radius:7px;overflow:hidden;margin:10px 0}
+.v2-line span{display:block;height:100%;background:#cbd0d5;border-radius:7px}
+.v2-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid #383c41}
+.v2-row:last-child{border:0}.v2-row strong{font-size:15px}
+.v2-section{margin:18px 0}.v2-section h2{margin:0 0 12px}
+.v2-status{font-size:12px;color:#e0bd88;margin:6px 0}
+.v2-warning{border:1px solid #75634c;background:#332c24;color:#ead0a6;padding:12px;border-radius:12px;margin:10px 0}
+.v2-subtle{font-size:12px;color:#aab0b7}
+.v2-tabset{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:#171a1d;padding:5px;border-radius:12px;margin-bottom:14px}
+.v2-tabset button{border-radius:9px;background:transparent;color:#aeb4bc;padding:12px}
+.v2-tabset button.active{background:#373b40;color:#fff}
+.v2-catgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.v2-catgrid button{background:#292d31;color:#f2f4f6;border:1px solid #42474c;border-radius:12px;padding:13px 5px;min-height:57px;font-size:13px}
+.v2-catgrid button.selected{background:#485057;border-color:#dde2e6}
+.v2-amount{text-align:center;font-size:34px;font-weight:800;letter-spacing:-.5px;width:100%}
+.v2-account{display:flex;justify-content:space-between;align-items:center;background:#292d30;border:1px solid #363a3f;border-radius:12px;padding:16px;margin:8px 0;gap:12px}
+.v2-section-header{font-weight:700;color:#eef0f1;margin:22px 0 12px}
+.v2-inline{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.v2-pill{border-radius:16px;padding:5px 10px;background:#383d42;color:#d8dce0;font-size:12px}
+.v2-planrows{display:flex;flex-direction:column;gap:10px}
+.v2-planrows label{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.v2-planrows input{width:130px;max-width:48%;background:#181b1e;border:1px solid #454a50;color:#fff;border-radius:10px;padding:10px;text-align:right}
+.v2-bottom-btn{width:100%;padding:14px}
+@media(max-width:650px){.content{padding:18px 14px 105px}.card{padding:15px}.v2-hero{padding:18px}.fab{right:15px;bottom:calc(82px + env(safe-area-inset-bottom));box-shadow:none;padding:13px 18px}.nav-bottom button{min-width:65px}.dialog{padding:18px;max-height:90dvh}.v2-mini strong{font-size:18px}}
