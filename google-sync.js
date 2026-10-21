@@ -12,11 +12,12 @@ async function api(path,opts={}){
  if(!res.ok){let e=await res.json().catch(()=>({}));throw Error(e.error?.message||('Google API '+res.status))}
  return res.json();
 }
+const tableNames=['FinanceApp','Transactions','Accounts','Budgets'];
 async function ensureTab(){
  const meta=await api(encodeURIComponent(config.sheetId)+'?fields=sheets.properties.title');
- if(!(meta.sheets||[]).some(s=>s.properties.title==='FinanceApp')){
-  await api(encodeURIComponent(config.sheetId)+':batchUpdate',{method:'POST',body:JSON.stringify({requests:[{addSheet:{properties:{title:'FinanceApp'}}}]})});
- }
+ const existing=new Set((meta.sheets||[]).map(s=>s.properties.title));
+ const requests=tableNames.filter(name=>!existing.has(name)).map(title=>({addSheet:{properties:{title}}}));
+ if(requests.length)await api(encodeURIComponent(config.sheetId)+':batchUpdate',{method:'POST',body:JSON.stringify({requests})});
 }
 function snapshot(){return JSON.stringify({schema:1,savedAt:new Date().toISOString(),data:state})}
 async function remote(){
@@ -35,9 +36,26 @@ async function upload(){
  await api(encodeURIComponent(config.sheetId)+'/values/'+encodeURIComponent('FinanceApp!A1:A3000')+':clear',{method:'POST',body:'{}'});
  await api(encodeURIComponent(config.sheetId)+'/values/'+encodeURIComponent('FinanceApp!A1')+'?valueInputOption=RAW',{method:'PUT',body:JSON.stringify({values,majorDimension:'ROWS'})});
 }
+function rowsForSheets(){
+ const acc=state.accounts||[],tx=state.transactions||[], budgets=state.budgets||{};
+ const names=new Map(acc.map(a=>[a.id,a.name]));
+ const accountRows=[['Account ID','Account Name','Opening Balance (THB)'],...acc.map(a=>[a.id,a.name,Number(a.opening)||0])];
+ const transactionRows=[['Transaction ID','Date','Type','Category','Amount (THB)','Account','Destination Account','Note','Account ID','Destination Account ID'],...tx.map(t=>[t.id,t.date,t.type,t.category||'',Number(t.amount)||0,names.get(t.account)||'',names.get(t.to)||'',t.note||'',t.account||'',t.to||''])];
+ const budgetRows=[['Category','Monthly Budget (THB)'],...Object.entries(budgets).map(([name,amount])=>[name,Number(amount)||0])];
+ return [{name:'Transactions',values:transactionRows},{name:'Accounts',values:accountRows},{name:'Budgets',values:budgetRows}];
+}
+async function publishTables(){
+ const id=encodeURIComponent(config.sheetId), tables=rowsForSheets();
+ // Snapshot remains untouched: these are readable views, not the recovery source.
+ const ranges=tables.map(t=>t.name+'!A1:J5000');
+ await api(id+'/values:batchClear',{method:'POST',body:JSON.stringify({ranges})});
+ await api(id+'/values:batchUpdate',{method:'POST',body:JSON.stringify({
+  valueInputOption:'RAW',data:tables.map(t=>({range:t.name+'!A1',majorDimension:'ROWS',values:t.values}))
+ })});
+}
 async function flush(){
  if(busy){pending=true;return}if(!synced||!token)return;
- busy=true;try{await upload();status('✓ บันทึกข้อมูลล่าสุดลง Google Sheets แล้ว '+new Date().toLocaleTimeString('th-TH'))}catch(e){status('ซิงก์ไม่สำเร็จ: '+e.message+' (ข้อมูลยังอยู่ในเครื่องนี้)','error')}finally{busy=false;if(pending){pending=false;schedule()}}
+ busy=true;try{await upload();await publishTables();status('✓ บันทึกข้อมูลและอัปเดตตาราง Transactions / Accounts / Budgets แล้ว '+new Date().toLocaleTimeString('th-TH'))}catch(e){status('ซิงก์ไม่สำเร็จ: '+e.message+' (ข้อมูลยังอยู่ในเครื่องนี้)','error')}finally{busy=false;if(pending){pending=false;schedule()}}
 }
 function schedule(){if(!synced)return;clearTimeout(timer);timer=setTimeout(flush,1200)}
 async function initialize(){
